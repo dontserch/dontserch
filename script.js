@@ -1,35 +1,40 @@
-document.getElementById('login-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent the default form submission
+const signUpButton = document.getElementById('signUp');
+const signInButton = document.getElementById('signIn');
+const container = document.getElementById('container');
 
-    // Get values from input fields
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    // Process or display the values
-    console.log('Username:', username);
-    console.log('Password:', password);
-
-    // Optional: Send data to a server or perform further actions
-    sendDataToServer(username, password);
+signUpButton.addEventListener('click', () => {
+	container.classList.add("right-panel-active");
 });
 
-function sendDataToServer(username, password) {
-    fetch('https://your-server-endpoint.com/login', {
+signInButton.addEventListener('click', () => {
+	container.classList.remove("right-panel-active");
+});
+document.querySelector('.sign-up-container form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = e.target[0].value;
+    const email = e.target[1].value;
+    const password = e.target[2].value;
+
+    const res = await fetch('http://localhost:5000/signup', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            username: username,
-            password: password
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Handle server response
-        console.log('Server response:', data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: name, email, password }),
     });
-}
+
+    const data = await res.json();
+    alert(data.message);
+});
+document.querySelector('.sign-in-container form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = e.target[0].value;
+    const password = e.target[1].value;
+
+    const res = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+    alert(data.message);
+});
